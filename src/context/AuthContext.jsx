@@ -18,10 +18,9 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   // Check current user on mount
-  useEffect(() => {
-    checkAuth();
-  }, []);
+  // src/context/AuthContext.jsx
 
+  // 1. Update the checkAuth method to read the token from storage
   const checkAuth = async () => {
     try {
       setLoading(true);
@@ -30,11 +29,34 @@ export const AuthProvider = ({ children }) => {
       setError(null);
     } catch (err) {
       setUser(null);
-      setError(err.message);
+      // If the token is invalid or missing, don't show a loud error on mount
+      if (localStorage.getItem('token')) {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  // 2. Add a new useEffect inside AuthProvider to check the URL for a callback token
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token) {
+      // Save the token to local storage
+      localStorage.setItem('token', token);
+      
+      // Clean up the URL bar so the token doesn't sit visible in the address bar
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // Re-verify the user profile now that the token is present
+      checkAuth();
+    } else {
+      // Regular app mount sequence
+      checkAuth();
+    }
+  }, []);
 
   const register = async (userData) => {
     try {
