@@ -17,11 +17,31 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Check current user on mount
-  // src/context/AuthContext.jsx
+  // Intercept the token parameter BEFORE making our backend calls
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromUrl = urlParams.get('token');
 
-  // 1. Update the checkAuth method to read the token from storage
+    if (tokenFromUrl) {
+      // 1. Commit token directly to storage
+      localStorage.setItem('token', tokenFromUrl);
+
+      // 2. Clear query string parameters from browser address bar
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // 3. Now run the profile verification check safely
+    checkAuth();
+  }, []);
+
   const checkAuth = async () => {
+    // If there is no token anywhere, don't ping the server on boot (prevents the 401 log)
+    if (!localStorage.getItem('token')) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const currentUser = await api.getCurrentUser();
@@ -29,34 +49,11 @@ export const AuthProvider = ({ children }) => {
       setError(null);
     } catch (err) {
       setUser(null);
-      // If the token is invalid or missing, don't show a loud error on mount
-      if (localStorage.getItem('token')) {
-        setError(err.message);
-      }
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-
-  // 2. Add a new useEffect inside AuthProvider to check the URL for a callback token
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-
-    if (token) {
-      // Save the token to local storage
-      localStorage.setItem('token', token);
-      
-      // Clean up the URL bar so the token doesn't sit visible in the address bar
-      window.history.replaceState({}, document.title, window.location.pathname);
-      
-      // Re-verify the user profile now that the token is present
-      checkAuth();
-    } else {
-      // Regular app mount sequence
-      checkAuth();
-    }
-  }, []);
 
   const register = async (userData) => {
     try {
@@ -89,14 +86,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithGoogle = () => {
-    // This will redirect to Google OAuth
-    // After successful login, user will be redirected back to your app
     api.googleLogin();
   };
 
   const loginWithFacebook = () => {
     api.facebookLogin();    
-  }
+  };
 
   const logout = async () => {
     try {

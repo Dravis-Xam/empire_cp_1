@@ -7,12 +7,21 @@ class ApiService {
   }
 
   async request(endpoint, options = {}) {
+    // 1. Pull the JWT token out of local storage
+    const token = localStorage.getItem('token');
+
+    const headers = {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    };
+
+    // 2. If the token exists, attach it as an Authorization header
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${this.baseURL}${endpoint}`, {
-      credentials: 'include', // Important for cookies
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers,
       ...options,
     });
 
@@ -21,7 +30,6 @@ class ApiService {
       throw new Error(error.message || 'Request failed');
     }
 
-    // Check if response has content
     if (response.status === 204) {
       return null;
     }
@@ -30,33 +38,25 @@ class ApiService {
   }
 
   register(userData) {
-    return this.request('/register', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
+    return this.request('/register', { method: 'POST', body: JSON.stringify(userData) });
   }
 
   login(credentials) {
-    return this.request('/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-    });
+    return this.request('/login', { method: 'POST', body: JSON.stringify(credentials) });
   }
 
   googleLogin() {
-    const targetUrl = `${this.baseURL}/auth/google`;
-    // Force clean top-level window traversal
-    window.location.href = new URL(targetUrl).href;
+    window.location.assign(`${this.baseURL}/auth/google`);
   }
 
   facebookLogin() {
-    const targetUrl = `${this.baseURL}/auth/facebook`;
-    window.location.href = new URL(targetUrl).href;
+    window.location.assign(`${this.baseURL}/auth/facebook`);
   }
+
   logout() {
-    return this.request('/logout', {
-      method: 'POST',
-    });
+    // Clean local authentication tokens on a logout event
+    localStorage.removeItem('token');
+    return this.request('/logout', { method: 'POST' });
   }
 
   getCurrentUser() {
