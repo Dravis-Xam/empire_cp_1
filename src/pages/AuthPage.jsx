@@ -342,25 +342,42 @@ const AuthPage = () => {
                 flexFlow: "row nowrap"
               }
             }>
-              <button
-                type='button'
-                onClick={handleGoogleLogin}
-                disabled={loading}
+              {/* VANILLA ANCHOR ELEMENT FOR GOOGLE: 
+                Bypasses JavaScript fetching interceptors completely and mimics your working Postman tab test.
+              */}
+              <a
+                href="https://empire-backend-app.onrender.com/api/auth/google"
                 className="google-btn"
+                style={{
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  pointerEvents: loading ? 'none' : 'auto',
+                  opacity: loading ? 0.6 : 1
+                }}
               >
-                <FcGoogle className="google-icon" />
+                <FcGoogle className="google-icon" style={{ marginRight: '8px' }} />
                 Google
-              </button>
+              </a>
 
-              <button
-                type='button'
-                onClick={() => loginWithFacebook()}
-                disabled={loading}
+              <a
+                href="https://empire-backend-app.onrender.com/api/auth/facebook"
                 className="facebook-btn"
+                style={{
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  pointerEvents: loading ? 'none' : 'auto',
+                  opacity: loading ? 0.6 : 1
+                }}
               >
-                <FaFacebook className="facebook-icon" />
+                <FaFacebook className="facebook-icon" style={{ marginRight: '8px' }} />
                 Facebook
-              </button>
+              </a>
             </div>
 
             <div className="switch-container">
