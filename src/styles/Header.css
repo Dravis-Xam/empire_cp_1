@@ -31,6 +31,8 @@
     align-items: center;
     justify-content: space-evenly;
     font-family: 'league spartan';
+    width: 100%;
+    position: relative;
 }
 
 .dropdown-container {
