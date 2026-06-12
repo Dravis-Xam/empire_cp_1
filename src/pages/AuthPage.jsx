@@ -2,23 +2,22 @@
 import React, { useState, useEffect } from 'react';
 import { 
   FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiLogIn, 
-  FiUserPlus, FiShield, FiAlertCircle, FiCheckCircle,
-  FiTarget, FiZap, FiArrowRight, FiX, FiCpu, FiMonitor,
-  FiShoppingCart, FiTrendingUp
+  FiUserPlus, FiShield, FiAlertCircle, FiX, 
+  FiTarget, FiZap, FiArrowRight, FiShoppingCart, FiTrendingUp
 } from 'react-icons/fi';
 import { 
   FcGoogle, 
   FcBusinessman, 
   FcBusiness
 } from 'react-icons/fc';
-import { FaRocket, FaLock, FaMicrochip, FaBolt, FaFacebook } from 'react-icons/fa';
+import { FaRocket, FaMicrochip, FaBolt, FaFacebook } from 'react-icons/fa';
 import { IoMdFlash } from 'react-icons/io';
-import { MdOutlineElectricalServices, MdOutlineSecurity } from 'react-icons/md';
 import useAuth from '../hooks/useAuth';
 import '../styles/AuthPage.css';
 
 const AuthPage = () => {
-  const { login, register, loginWithGoogle, loading, error, isAuthenticated, loginWithFacebook } = useAuth();
+  // Use authorization methods extracted from your custom context module
+  const { login, register, loading, error, isAuthenticated } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [funFactIndex, setFunFactIndex] = useState(0);
@@ -46,7 +45,7 @@ const AuthPage = () => {
       setFunFactIndex((prev) => (prev + 1) % funFacts.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [funFacts.length]);
 
   const handleChange = (e) => {
     setFormData({
@@ -105,10 +104,6 @@ const AuthPage = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    loginWithGoogle();
-  };
-
   if (isAuthenticated) {
     return (
       <div className="auth-container">
@@ -129,7 +124,7 @@ const AuthPage = () => {
   return (
     <div className="auth-container">
       <div className="auth-wrapper">
-        {/* Left Side - Electronics Brand Section */}
+        {/* Left Side Banner Display Block */}
         <div className="brand-section">
           <div className="brand-content">
             <div className="logo">
@@ -164,7 +159,7 @@ const AuthPage = () => {
           </div>
         </div>
 
-        {/* Right Side - Form Section */}
+        {/* Right Side Form Action Container Block */}
         <div className="form-section">
           <div className="form-wrapper">
             <div className="form-header">
@@ -191,7 +186,7 @@ const AuthPage = () => {
             <form onSubmit={handleSubmit} className="auth-form">
               {!isLogin && (
                 <>
-                  <div className="form-group floating-group">
+                  <div className="form-group">
                     <div className={`input-wrapper ${focusedField === 'name' || formData.name ? 'focused' : ''}`}>
                       <FcBusinessman className="input-icon" />
                       <input
@@ -206,14 +201,12 @@ const AuthPage = () => {
                         disabled={loading}
                         required={!isLogin}
                       />
-                      <label htmlFor="name" className="floating-label">
-                        Full Name
-                      </label>
+                      <label htmlFor="name" className="floating-label">Full Name</label>
                       <div className="input-underline"></div>
                     </div>
                   </div>
 
-                  <div className="form-group floating-group">
+                  <div className="form-group">
                     <div className={`input-wrapper ${focusedField === 'email' || formData.email ? 'focused' : ''}`}>
                       <FiMail className="input-icon" />
                       <input
@@ -228,14 +221,12 @@ const AuthPage = () => {
                         disabled={loading}
                         required={!isLogin}
                       />
-                      <label htmlFor="email" className="floating-label">
-                        Email Address
-                      </label>
+                      <label htmlFor="email" className="floating-label">Email Address</label>
                       <div className="input-underline"></div>
                     </div>
                   </div>
 
-                  <div className="form-group floating-group">
+                  <div className="form-group">
                     <div className={`input-wrapper ${focusedField === 'role' || formData.role ? 'focused' : ''}`}>
                       <FcBusiness className="input-icon" />
                       <select
@@ -251,16 +242,14 @@ const AuthPage = () => {
                         <option value="moderator">Moderator</option>
                         <option value="admin">Administrator</option>
                       </select>
-                      <label htmlFor="role" className="floating-label">
-                        Role
-                      </label>
+                      <label htmlFor="role" className="floating-label">Role</label>
                       <div className="input-underline"></div>
                     </div>
                   </div>
                 </>
               )}
 
-              <div className="form-group floating-group">
+              <div className="form-group">
                 <div className={`input-wrapper ${focusedField === 'username' || formData.username ? 'focused' : ''}`}>
                   <FiUser className="input-icon" />
                   <input
@@ -275,14 +264,12 @@ const AuthPage = () => {
                     disabled={loading}
                     required
                   />
-                  <label htmlFor="username" className="floating-label">
-                    Username
-                  </label>
+                  <label htmlFor="username" className="floating-label">Username</label>
                   <div className="input-underline"></div>
                 </div>
               </div>
 
-              <div className="form-group floating-group">
+              <div className="form-group">
                 <div className={`input-wrapper ${focusedField === 'password' || formData.password ? 'focused' : ''}`}>
                   <FiLock className="input-icon" />
                   <input
@@ -297,13 +284,12 @@ const AuthPage = () => {
                     disabled={loading}
                     required
                   />
-                  <label htmlFor="password" className="floating-label">
-                    Password
-                  </label>
+                  <label htmlFor="password" className="floating-label">Password</label>
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="toggle-password"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <FiEyeOff /> : <FiEye />}
                   </button>
@@ -333,49 +319,29 @@ const AuthPage = () => {
               <span>Or continue with</span>
             </div>
 
-            <div style={
-              {
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-evenly",
-                gap: "12px",
-                flexFlow: "row nowrap"
-              }
-            }>
-              {/* VANILLA ANCHOR ELEMENT FOR GOOGLE: 
-                Bypasses JavaScript fetching interceptors completely and mimics your working Postman tab test.
-              */}
+            {/* Identity Gateways using direct anchor structures to avoid script-level 401 exceptions */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+              gap: "12px",
+              flexFlow: "row nowrap"
+            }}>
               <a
                 href="https://empire-backend-app.onrender.com/api/auth/google"
                 className="google-btn"
-                style={{
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '100%',
-                  pointerEvents: loading ? 'none' : 'auto',
-                  opacity: loading ? 0.6 : 1
-                }}
+                style={{ pointerEvents: loading ? 'none' : 'auto', opacity: loading ? 0.6 : 1 }}
               >
-                <FcGoogle className="google-icon" style={{ marginRight: '8px' }} />
+                <FcGoogle className="google-icon" />
                 Google
               </a>
 
               <a
                 href="https://empire-backend-app.onrender.com/api/auth/facebook"
                 className="facebook-btn"
-                style={{
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '100%',
-                  pointerEvents: loading ? 'none' : 'auto',
-                  opacity: loading ? 0.6 : 1
-                }}
+                style={{ pointerEvents: loading ? 'none' : 'auto', opacity: loading ? 0.6 : 1 }}
               >
-                <FaFacebook className="facebook-icon" style={{ marginRight: '8px' }} />
+                <FaFacebook className="facebook-icon" />
                 Facebook
               </a>
             </div>
