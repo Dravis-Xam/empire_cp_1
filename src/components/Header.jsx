@@ -19,8 +19,8 @@ export default function Header({options = {}}) {
                 <span>Shop</span>
                 <FaChevronDown className='icon' />
             </div>
-            <div className="contact"></div>
-            <div className="about"></div>
+            <div className="contact">Contact</div>
+            <div className="about">About</div>
         </div>
 
         <div className="right-actions">
