@@ -179,7 +179,7 @@ export default function Header() {
           </div>
 
           {activeDropdown === 'featured' && (
-            <div className="dropdown-menu">
+            <div className="dropdown-container">
               {featuredItems.map((i, idx) => (
                 <Link key={idx} to={i.link}>
                   {i.icon} {i.name}
@@ -200,7 +200,7 @@ export default function Header() {
           </div>
 
           {activeDropdown === 'categories' && (
-            <div className="dropdown-menu">
+            <div className="dropdown-container">
               {categoryItems.map((i, idx) => (
                 <Link key={idx} to={i.link}>
                   {i.icon} {i.name}
@@ -210,8 +210,8 @@ export default function Header() {
           )}
         </div>
 
-        <Link className='nav-link' to="/contact">Contact</Link>
-        <Link className='nav-link' to="/about">About</Link>
+        <Link className='nav-link nav-container' to="/contact">Contact</Link>
+        <Link className='nav-link nav-container' to="/about">About</Link>
       </div>
 
       {/* SEARCH */}
