@@ -1,5 +1,6 @@
 // src/pages/AuthPage.jsx
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiLogIn, 
   FiUserPlus, FiShield, FiAlertCircle, FiX, 
@@ -16,7 +17,7 @@ import useAuth from '../hooks/useAuth';
 import '../styles/AuthPage.css';
 
 const AuthPage = () => {
-  // Use authorization methods extracted from your custom context module
+  const navigate = useNavigate();
   const { login, register, loading, error, isAuthenticated } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -31,6 +32,7 @@ const AuthPage = () => {
   });
   const [formError, setFormError] = useState('');
   const [showError, setShowError] = useState(true);
+  const [redirecting, setRedirecting] = useState(false);
 
   const funFacts = [
     { icon: <FaMicrochip />, text: "Latest Intel & AMD processors in stock!" },
@@ -46,6 +48,17 @@ const AuthPage = () => {
     }, 6000);
     return () => clearInterval(interval);
   }, [funFacts.length]);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && !redirecting) {
+      setRedirecting(true);
+      // Small delay to show the redirect message
+      setTimeout(() => {
+        navigate('/', { replace: true });
+      }, 1500);
+    }
+  }, [isAuthenticated, navigate, redirecting]);
 
   const handleChange = (e) => {
     setFormData({
@@ -75,7 +88,11 @@ const AuthPage = () => {
       if (!result.success) {
         setFormError(result.error || 'Invalid credentials. Please try again.');
         setShowError(true);
+        // Stay on login page if authentication fails
+        return;
       }
+      
+      // If login successful, the useEffect will handle redirect
     } else {
       if (!formData.username || !formData.password || !formData.name || !formData.email) {
         setFormError('All fields are required');
@@ -100,11 +117,15 @@ const AuthPage = () => {
       if (!result.success) {
         setFormError(result.error || 'Registration failed. Please try again.');
         setShowError(true);
+        return;
       }
+      
+      // If registration successful, the useEffect will handle redirect
     }
   };
 
-  if (isAuthenticated) {
+  // Show redirecting message when authenticated
+  if (isAuthenticated || redirecting) {
     return (
       <div className="auth-container">
         <div className="redirect-card">
@@ -162,7 +183,7 @@ const AuthPage = () => {
         {/* Right Side Form Action Container Block */}
         <div className="form-section">
           <div className="form-wrapper">
-            <div className="form-header">
+            <div id="sign-in-form" className="form-header">
               <h2>{isLogin ? 'Sign In' : 'Sign Up'}</h2>
               <p className="form-subtitle">
                 {isLogin ? 'Welcome back to Empire Hub!' : 'Create your account to start shopping'}
@@ -186,7 +207,7 @@ const AuthPage = () => {
             <form onSubmit={handleSubmit} className="auth-form">
               {!isLogin && (
                 <>
-                  <div className="form-group">
+                  <div id="sign-up-form" className="form-group">
                     <div className={`input-wrapper ${focusedField === 'name' || formData.name ? 'focused' : ''}`}>
                       <FcBusinessman className="input-icon" />
                       <input
@@ -226,7 +247,7 @@ const AuthPage = () => {
                     </div>
                   </div>
 
-                  <div className="form-group">
+                  <div id="role-selection" className="form-group">
                     <div className={`input-wrapper ${focusedField === 'role' || formData.role ? 'focused' : ''}`}>
                       <FcBusiness className="input-icon" />
                       <select
@@ -315,7 +336,7 @@ const AuthPage = () => {
               </button>
             </form>
 
-            <div className="divider">
+            <div id='oauth-login' className="divider">
               <span>Or continue with</span>
             </div>
 
@@ -375,5 +396,53 @@ const AuthPage = () => {
     </div>
   );
 };
+
+export const meta = {
+  title: "Authentication",
+  description:
+    "Login and registration page for Empire Hub users, including OAuth and role-based access.",
+  keywords: [
+    "login",
+    "register",
+    "auth",
+    "authentication",
+    "sign in",
+    "sign up",
+    "account",
+    "user login",
+    "create account",
+    "oauth",
+    "google login",
+    "facebook login"
+  ],
+  url: "/auth"
+};
+
+export const searchSections = [
+  {
+    title: "Sign In Form",
+    anchor: "sign-in-form",
+    description: "Login using username and password",
+    keywords: ["login", "sign in", "username", "password"]
+  },
+  {
+    title: "Sign Up Form",
+    anchor: "sign-up-form",
+    description: "Create a new Empire Hub account",
+    keywords: ["register", "sign up", "create account", "email"]
+  },
+  {
+    title: "OAuth Login",
+    anchor: "oauth-login",
+    description: "Login using Google or Facebook authentication",
+    keywords: ["google", "facebook", "oauth", "social login"]
+  },
+  {
+    title: "Role Selection",
+    anchor: "role-selection",
+    description: "Choose user role during registration",
+    keywords: ["role", "admin", "user", "moderator"]
+  }
+];
 
 export default AuthPage;

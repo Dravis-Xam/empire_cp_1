@@ -45,6 +45,10 @@ class ApiService {
     return this.request('/login', { method: 'POST', body: JSON.stringify(credentials) });
   }
 
+  updateUser(credentials) {
+    return this.request('/update-user', { method: 'POST', body: JSON.stringify(credentials) })
+  }
+
   googleLogin() {
     window.location.assign(`${this.baseURL}/auth/google`);
   }

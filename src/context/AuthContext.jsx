@@ -16,27 +16,47 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [loginSave, setLoginSave] = useState(() => {
+    const saved = localStorage.getItem("savedlogin");
+
+    return saved
+      ? JSON.parse(saved)
+      : {
+          id: null,
+          isAuthenticated: false,
+        };
+  });
 
   // Intercept the token parameter BEFORE making our backend calls
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const tokenFromUrl = urlParams.get('token');
+
+  //   if (tokenFromUrl) {
+  //     // 1. Commit token directly to storage
+  //     localStorage.setItem('token', tokenFromUrl);
+
+  //     // 2. Clear query string parameters from browser address bar
+  //     window.history.replaceState({}, document.title, window.location.pathname);
+  //   }
+
+  //   // 3. Now run the profile verification check safely
+  //   checkAuth();
+  // }, []);
+
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tokenFromUrl = urlParams.get('token');
-
-    if (tokenFromUrl) {
-      // 1. Commit token directly to storage
-      localStorage.setItem('token', tokenFromUrl);
-
-      // 2. Clear query string parameters from browser address bar
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    // 3. Now run the profile verification check safely
-    checkAuth();
+    checkAuth()
   }, []);
 
   const checkAuth = async () => {
-    // If there is no token anywhere, don't ping the server on boot (prevents the 401 log)
-    if (!localStorage.getItem('token')) {
+    const token = localStorage.getItem("token");
+
+    const savedLogin = JSON.parse(
+      localStorage.getItem("savedlogin") || "{}"
+    );
+
+    // Neither token nor previous login exists
+    if (!token && !savedLogin?.isAuthenticated) {
       setUser(null);
       setLoading(false);
       return;
@@ -44,11 +64,34 @@ export const AuthProvider = ({ children }) => {
 
     try {
       setLoading(true);
+
       const currentUser = await api.getCurrentUser();
+
       setUser(currentUser);
+
+      const loginData = {
+        id: currentUser.id,
+        isAuthenticated: true,
+      };
+
+      setLoginSave(loginData);
+      localStorage.setItem(
+        "savedlogin",
+        JSON.stringify(loginData)
+      );
+
       setError(null);
     } catch (err) {
       setUser(null);
+
+      localStorage.removeItem("savedlogin");
+      localStorage.removeItem("token");
+
+      setLoginSave({
+        id: null,
+        isAuthenticated: false,
+      });
+
       setError(err.message);
     } finally {
       setLoading(false);
@@ -76,6 +119,13 @@ export const AuthProvider = ({ children }) => {
       const loggedInUser = await api.login(credentials);
       setUser(loggedInUser);
       setError(null);
+      const loginData = {
+        id: loggedInUser.id,
+        isAuthenticated: true,
+      };
+
+      setLoginSave(loginData);
+      localStorage.setItem("savedlogin", JSON.stringify(loginData));
       return { success: true, user: loggedInUser };
     } catch (err) {
       setError(err.message);
@@ -84,6 +134,24 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  const updateUser = async (credentials) => {
+    try {
+      setLoading(true);
+      const updatedUser = await api.updateUser(credentials);
+      setUser(updatedUser);
+      setError(null);
+      return {
+        success: true,
+        user: updatedUser,
+      };
+    } catch (err) {
+      setError(err.message);
+      return { success: false, error: err.message };
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const loginWithGoogle = () => {
     api.googleLogin();
@@ -98,6 +166,13 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       await api.logout();
       setUser(null);
+      localStorage.removeItem("savedlogin");
+      localStorage.removeItem("token");
+
+      setLoginSave({
+        id: null,
+        isAuthenticated: false,
+      });
       setError(null);
       return { success: true };
     } catch (err) {
@@ -113,6 +188,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     error,
     isAuthenticated: !!user,
+    updateUser,
     register,
     login,
     loginWithGoogle,

@@ -1,74 +1,395 @@
+/* src/styles/Header.css */
+:root {
+  --text: #ffffff;
+  --primary: #4169E1;
+  --primary-hover: #5a7ee5;
+  --bg-dark: rgba(0, 0, 0, 0.216);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-hover: rgba(255, 255, 255, 0.15);
+  --dropdown-bg: rgba(20, 25, 45, 0.95);
+}
+
 .header {
-    padding: 24px 14px;
-    width: 50%;
-    margin: 0 auto;
-    position: fixed;
-    top: 10px;
-    border-radius: 100px;
-    background-color: rgba(0, 0, 0, 0.216);
-    backdrop-filter: blur(10px);
-    left: 50%;
-    transform: translateX(-50%);
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
+  padding: 12px 24px;
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: fixed;
+  top: 20px;
+  border-radius: 100px;
+  background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  left: 50%;
+  transform: translateX(-50%);
+  height: auto;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  z-index: 1000;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.header:hover {
+  background-color: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .home-link {
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 700;
-    font-family: 'League Spartan';
-    font-size: 26px;
-    position: absolute;
-    left: -250px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+  font-family: 'League Spartan', sans-serif;
+  font-size: 24px;
+  background: linear-gradient(135deg, #fff, #4169E1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.home-link:hover {
+  background: linear-gradient(135deg, #4169E1, #fff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transform: scale(1.02);
 }
 
 .nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    font-family: 'league spartan';
-    width: 100%;
-    position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'League Spartan', sans-serif;
+  flex: 1;
+  position: relative;
 }
 
-.dropdown-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.nav-container {
+  position: relative;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 100px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.inner a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-container:hover .inner,
+.nav-container.active .inner {
+  background-color: var(--glass-hover);
+  transform: translateY(-1px);
+}
+
+.inner .icon {
+  transition: transform 0.3s ease;
+  font-size: 12px;
+}
+
+.inner .icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* Morphing Slide Animation for Dropdown */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  min-width: 220px;
+  background: var(--dropdown-bg);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 8px 0;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  z-index: 100;
+  transform-origin: top center;
+}
+
+.slide-morph {
+  animation: morphSlide 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+}
+
+@keyframes morphSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(0.8);
+    border-radius: 8px;
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(0) scaleY(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+    border-radius: 16px;
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  padding-left: 28px;
+}
+
+.dropdown-icon {
+  font-size: 18px;
+  color: #4169E1;
 }
 
 .right-actions {
-    display: flex;
-    justify-content: space-between;
-    flex-flow: row nowrap;
-    align-items: center;
-    position: absolute;
-    right: -250px;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.right-actions > span > * {
-    color: white;
+/* Google-like Search Bar */
+.search-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 40px;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.search-container:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.search-container.focused {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(65, 105, 225, 0.5);
+  box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+}
+
+.search-icon {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  margin-right: 10px;
+  transition: color 0.2s;
+}
+
+.search-container.focused .search-icon {
+  color: #4169E1;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 14px;
+  min-width: 200px;
+  outline: none;
+  font-family: inherit;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.search-clear {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 8px;
+  transition: all 0.2s;
+}
+
+.search-clear:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.search-results-container {
+  display: flex;
+  flex-flow: column nowrap;
+  position: absolute;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--bg-dark);
+  backdrop-filter: blur(10px);
+}
+
+.cart-icon {
+  position: relative;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.cart-icon:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.cart-icon .icon {
+  font-size: 22px;
+  color: var(--text);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #4169E1;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  font-family: monospace;
+  border: 2px solid rgba(0, 0, 0, 0.5);
 }
 
 .login-btn {
-    padding: 4px;
-    text-align: center;
-    color: var(--text);
-    background-color: #4169E1;
-    width: 80px;
-    height: 40px;
-    border: none;
-    font-size: 16px;
-    border-radius: 140px;
-    font-family: 'League Spartan';
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  text-align: center;
+  color: var(--text);
+  background: linear-gradient(135deg, #4169E1, #2c4fc7);
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 40px;
+  font-family: 'League Spartan', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
-.icon {
-    height: 20px;
-    width: 20px;
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(65, 105, 225, 0.4);
+  background: linear-gradient(135deg, #5a7ee5, #3a5fcf);
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .header {
+    width: 95%;
+    padding: 10px 20px;
+  }
+  
+  .home-link {
+    font-size: 18px;
+  }
+  
+  .search-input {
+    min-width: 120px;
+  }
+  
+  .inner {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    border-radius: 20px;
+    top: 10px;
+    gap: 12px;
+  }
+  
+  .home-link {
+    font-size: 16px;
+    order: 1;
+  }
+  
+  .nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .right-actions {
+    order: 2;
+  }
+  
+  .search-input {
+    min-width: 100px;
+  }
+  
+  .login-btn span:not(.btn-icon) {
+    display: none;
+  }
+  
+  .login-btn {
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    display: none;
+  }
+  
+  .search-container {
+    padding: 8px;
+  }
+  
+  .search-container.focused .search-input {
+    display: block;
+    position: absolute;
+    left: 45px;
+    background: rgba(0,0,0,0.9);
+    padding: 8px;
+    border-radius: 20px;
+    width: 180px;
+  }
 }

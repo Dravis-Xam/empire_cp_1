@@ -17,6 +17,12 @@ export const handleRegister = async (payload) => {
   const result = await register(payload);
 };
 
+// Update 
+export const handleUpdateUser = async(payload) => {
+  const user = await handleUpdateUser(payload)
+  return user
+}
+
 // Google Login
 export const handleGoogleLogin = () => {
   loginWithGoogle(); // Redirects to Google OAuth
