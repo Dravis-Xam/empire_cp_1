@@ -97,6 +97,15 @@
   transform: translateY(-1px);
 }
 
+.nav-link {
+  text-decoration: none;
+  color: var(--text);
+}
+
+.nav-link:hover {
+  color: var(--dropdown-bg);
+}
+
 .inner .icon {
   transition: transform 0.3s ease;
   font-size: 12px;

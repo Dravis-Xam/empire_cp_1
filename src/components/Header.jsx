@@ -24,13 +24,9 @@ import {
 import { IoPerson } from "react-icons/io5";
 import useAuth from '../hooks/useAuth';
 
-// 🔥 SMART SEARCH ENGINE
-import searchSite, {
-  searchIndex,
-  resolveSearchNavigation
-} from '../services/search';
+import searchSite, { resolveSearchNavigation } from '../services/search';
 
-export default function Header({ options = {} }) {
+export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchValue, setSearchValue] = useState('');
@@ -61,22 +57,20 @@ export default function Header({ options = {} }) {
     { icon: <FaGamepad />, name: "Gaming", link: "/category/gaming" }
   ];
 
-  // -----------------------------
-  // CLICK OUTSIDE HANDLER
-  // -----------------------------
+  // ---------------- CLICK OUTSIDE ----------------
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (activeDropdown !== null) {
-        const isOutside =
-          !dropdownRefs.current[activeDropdown]?.contains(event.target);
-
-        if (isOutside) setActiveDropdown(null);
+    const handleClickOutside = (e) => {
+      if (
+        activeDropdown &&
+        !dropdownRefs.current[activeDropdown]?.contains(e.target)
+      ) {
+        setActiveDropdown(null);
       }
 
       if (
         searchFocused &&
         searchContainerRef.current &&
-        !searchContainerRef.current.contains(event.target)
+        !searchContainerRef.current.contains(e.target)
       ) {
         setSearchFocused(false);
       }
@@ -86,57 +80,44 @@ export default function Header({ options = {} }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [activeDropdown, searchFocused]);
 
-  // -----------------------------
-  // DEBOUNCE SEARCH INPUT
-  // -----------------------------
+  // ---------------- DEBOUNCE ----------------
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedValue(searchValue);
-    }, 250);
-
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setDebouncedValue(searchValue), 250);
+    return () => clearTimeout(t);
   }, [searchValue]);
 
   useEffect(() => {
     setActiveIndex(-1);
   }, [searchValue]);
 
-  // -----------------------------
-  // SEARCH RESULTS (FUSE.JS)
-  // -----------------------------
+  // ---------------- SEARCH ----------------
   const searchResults = useMemo(() => {
     return searchSite(debouncedValue, 8);
   }, [debouncedValue]);
 
-  // -----------------------------
-  // KEYBOARD NAVIGATION
-  // -----------------------------
+  // ---------------- KEYBOARD CONTROL ----------------
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handler = (e) => {
       if (!searchFocused || searchResults.length === 0) return;
 
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
-          setActiveIndex((prev) =>
-            prev < searchResults.length - 1 ? prev + 1 : 0
+          setActiveIndex((p) =>
+            p < searchResults.length - 1 ? p + 1 : 0
           );
           break;
 
         case 'ArrowUp':
           e.preventDefault();
-          setActiveIndex((prev) =>
-            prev > 0 ? prev - 1 : searchResults.length - 1
+          setActiveIndex((p) =>
+            p > 0 ? p - 1 : searchResults.length - 1
           );
           break;
 
         case 'Enter':
           e.preventDefault();
-
-          if (
-            activeIndex >= 0 &&
-            activeIndex < searchResults.length
-          ) {
+          if (activeIndex >= 0) {
             handleResultClick(searchResults[activeIndex]);
           }
           break;
@@ -152,32 +133,27 @@ export default function Header({ options = {} }) {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
   }, [searchFocused, searchResults, activeIndex]);
 
-  // -----------------------------
-  // AUTO SCROLL ACTIVE ITEM
-  // -----------------------------
+  // ---------------- SCROLL ACTIVE ITEM ----------------
   useEffect(() => {
     if (activeIndex >= 0 && resultsContainerRef.current) {
       const el = resultsContainerRef.current.children[activeIndex];
-      if (el) el.scrollIntoView({ block: 'nearest' });
+      el?.scrollIntoView({ block: 'nearest' });
     }
   }, [activeIndex]);
 
-  const handleDropdownToggle = (dropdown) => {
-    setActiveDropdown((prev) =>
-      prev === dropdown ? null : dropdown
-    );
+  const handleDropdownToggle = (key) => {
+    setActiveDropdown((prev) => (prev === key ? null : key));
   };
 
-  // -----------------------------
-  // SMART NAVIGATION (PAGE + SECTION)
-  // -----------------------------
+  // ---------------- SMART NAVIGATION ----------------
   const handleResultClick = (item) => {
     setSearchValue('');
     setSearchFocused(false);
+    setActiveIndex(-1);
 
     resolveSearchNavigation(item, navigate, location);
   };
@@ -190,32 +166,23 @@ export default function Header({ options = {} }) {
         Empire Hub Phones
       </Link>
 
-      {/* ---------------- NAV ---------------- */}
+      {/* NAV */}
       <div className="nav">
         <div
-          className={`nav-container dropdown-container featured ${
+          className={`nav-container ${
             activeDropdown === 'featured' ? 'active' : ''
           }`}
           ref={(el) => (dropdownRefs.current.featured = el)}
         >
-          <div
-            className="inner"
-            onClick={() => handleDropdownToggle('featured')}
-          >
-            <span>Featured</span>
-            <FaChevronDown />
+          <div onClick={() => handleDropdownToggle('featured')}>
+            Featured <FaChevronDown />
           </div>
 
           {activeDropdown === 'featured' && (
             <div className="dropdown-menu">
-              {featuredItems.map((item, i) => (
-                <Link
-                  key={i}
-                  to={item.link}
-                  className="dropdown-item"
-                >
-                  {item.icon}
-                  <span>{item.name}</span>
+              {featuredItems.map((i, idx) => (
+                <Link key={idx} to={i.link}>
+                  {i.icon} {i.name}
                 </Link>
               ))}
             </div>
@@ -223,45 +190,31 @@ export default function Header({ options = {} }) {
         </div>
 
         <div
-          className={`nav-container dropdown-container shop ${
+          className={`nav-container ${
             activeDropdown === 'categories' ? 'active' : ''
           }`}
           ref={(el) => (dropdownRefs.current.categories = el)}
         >
-          <div
-            className="inner"
-            onClick={() => handleDropdownToggle('categories')}
-          >
-            <span>Categories</span>
-            <FaChevronDown />
+          <div onClick={() => handleDropdownToggle('categories')}>
+            Categories <FaChevronDown />
           </div>
 
           {activeDropdown === 'categories' && (
             <div className="dropdown-menu">
-              {categoryItems.map((item, i) => (
-                <Link
-                  key={i}
-                  to={item.link}
-                  className="dropdown-item"
-                >
-                  {item.icon}
-                  <span>{item.name}</span>
+              {categoryItems.map((i, idx) => (
+                <Link key={idx} to={i.link}>
+                  {i.icon} {i.name}
                 </Link>
               ))}
             </div>
           )}
         </div>
 
-        <div className="nav-container">
-          <Link to="/contact">Contact</Link>
-        </div>
-
-        <div className="nav-container">
-          <Link to="/about">About</Link>
-        </div>
+        <Link className='nav-link' to="/contact">Contact</Link>
+        <Link className='nav-link' to="/about">About</Link>
       </div>
 
-      {/* ---------------- SEARCH ---------------- */}
+      {/* SEARCH */}
       <div className="right-actions">
         <div
           ref={searchContainerRef}
@@ -269,20 +222,18 @@ export default function Header({ options = {} }) {
             searchFocused || searchValue ? 'focused' : ''
           }`}
         >
-          <FaSearch className="search-icon" />
+          <FaSearch />
 
           <input
-            type="text"
-            placeholder="Search pages, sections..."
             className="search-input"
             value={searchValue}
+            placeholder="Search pages & sections..."
             onChange={(e) => setSearchValue(e.target.value)}
             onFocus={() => setSearchFocused(true)}
           />
 
           {searchValue && (
             <button
-              className="search-clear"
               onClick={() => {
                 setSearchValue('');
                 setDebouncedValue('');
@@ -299,31 +250,19 @@ export default function Header({ options = {} }) {
               ref={resultsContainerRef}
             >
               {searchResults.length === 0 ? (
-                <div className="no-results">
-                  No results found
-                </div>
+                <div>No results found</div>
               ) : (
-                searchResults.map((item, index) => (
-                  <a
+                searchResults.map((item, idx) => (
+                  <div
                     key={item.id}
-                    href={item.url}
                     className={`search-result-item ${
-                      index === activeIndex
-                        ? 'keyboard-active'
-                        : ''
+                      idx === activeIndex ? 'active' : ''
                     }`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleResultClick(item);
-                    }}
+                    onClick={() => handleResultClick(item)}
                   >
-                    <span className={`result-tag ${item.type}`}>
-                      {item.type}
-                    </span>
-                    <span className="result-title">
-                      {item.title}
-                    </span>
-                  </a>
+                    <span className="tag">{item.type}</span>
+                    <span>{item.title}</span>
+                  </div>
                 ))
               )}
             </div>
@@ -331,26 +270,13 @@ export default function Header({ options = {} }) {
         </div>
 
         {/* CART */}
-        <span className="cart-icon" onClick={openCart}>
+        <span onClick={openCart}>
           <FaShoppingBasket />
         </span>
 
         {/* AUTH */}
-        <button
-          className="login-btn"
-          onClick={() =>
-            isAuthenticated ? logout() : navigate('/login')
-          }
-        >
-          {isAuthenticated ? (
-            <>
-              <IoMdLogOut /> Logout
-            </>
-          ) : (
-            <>
-              <IoPerson /> Login
-            </>
-          )}
+        <button className='login-btn' onClick={() => (isAuthenticated ? logout() : navigate('/login'))}>
+          {isAuthenticated ? <IoMdLogOut /> : <IoPerson />}
         </button>
       </div>
     </div>
