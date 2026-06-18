@@ -43,7 +43,7 @@
   position: fixed;
   top: 20px;
   border-radius: 100px;
-  background-color: var(--header-bg);
+  background-color: var(--bg-glass);
   backdrop-filter: blur(12px);
   left: 50%;
   transform: translateX(-50%);

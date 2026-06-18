@@ -1,7 +1,7 @@
 /* src/styles/Footer.css */
 
 .footer {
-  background: var(--bg-dark);
+  background: var(--bg-glass);
   color: var(--text);
   position: relative;
   z-index: 10;
