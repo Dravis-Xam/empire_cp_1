@@ -1,0 +1,41 @@
+.info-page {
+  padding: 120px 24px 80px;
+  max-width: 860px;
+  margin: 0 auto;
+  color: var(--text);
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 32px;
+  padding: 36px;
+}
+
+.info-card h1 {
+  font-size: 38px;
+  margin-bottom: 12px;
+  color: var(--text-h);
+}
+
+.info-card p {
+  margin-bottom: 24px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.75;
+}
+
+.info-content p {
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.7;
+}
+
+.info-back {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  text-decoration: none;
+}

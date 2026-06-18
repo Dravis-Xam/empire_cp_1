@@ -1,5 +1,6 @@
 // src/components/Footer.jsx
 import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { 
   FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaGithub
 } from 'react-icons/fa'
@@ -99,7 +100,7 @@ export default function Footer() {
             <ul className="footer-links">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <a href={link.link}>{link.name}</a>
+                  <Link to={link.link}>{link.name}</Link>
                 </li>
               ))}
             </ul>
@@ -111,7 +112,7 @@ export default function Footer() {
             <ul className="footer-links">
               {categories.map((category, index) => (
                 <li key={index}>
-                  <a href={category.link}>{category.name}</a>
+                  <Link to={`/shop#${category.name.toLowerCase()}`}>{category.name}</Link>
                 </li>
               ))}
             </ul>
@@ -123,7 +124,7 @@ export default function Footer() {
             <ul className="footer-links">
               {services.map((service, index) => (
                 <li key={index}>
-                  <a href={service.link}>{service.name}</a>
+                  <Link to={service.link}>{service.name}</Link>
                 </li>
               ))}
             </ul>

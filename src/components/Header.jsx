@@ -8,7 +8,8 @@ import {
   FaSearch,
   FaShoppingBasket,
   FaUser,
-  FaGamepad
+  FaGamepad,
+  FaHome,
 } from 'react-icons/fa';
 
 import { FaMobile } from 'react-icons/fa6';
@@ -56,12 +57,12 @@ export default function Header() {
   ];
 
   const categoryItems = [
-    { icon: <MdOutlineSmartphone />, name: "Smartphones", link: "/category/phones" },
-    { icon: <MdOutlineLaptop />, name: "Laptops", link: "/category/laptops" },
-    { icon: <MdOutlineTablet />, name: "Tablets", link: "/category/tablets" },
-    { icon: <MdHeadphones />, name: "Audio", link: "/category/audio" },
-    { icon: <MdOutlineWatch />, name: "Wearables", link: "/category/wearables" },
-    { icon: <FaGamepad />, name: "Gaming", link: "/category/gaming" }
+    { icon: <MdOutlineSmartphone />, name: "Smartphones", link: "/shop#phones" },
+    { icon: <MdOutlineLaptop />, name: "Laptops", link: "/shop#laptops" },
+    { icon: <MdOutlineTablet />, name: "Tablets", link: "/shop#tablets" },
+    { icon: <MdHeadphones />, name: "Audio", link: "/shop#audio" },
+    { icon: <MdOutlineWatch />, name: "Wearables", link: "/shop#wearables" },
+    { icon: <FaGamepad />, name: "Gaming", link: "/shop#gaming" }
   ];
 
   // ---------------- CLICK OUTSIDE ----------------
@@ -228,6 +229,22 @@ export default function Header() {
 
         <Link className='nav-link nav-container' to="/contact">Contact</Link>
         <Link className='nav-link nav-container' to="/about">About</Link>
+      </div>
+
+      {/* MOBILE FLOATING NAV */}
+      <div className="mobile-bottom-nav">
+        <Link to="/" aria-label="Home" className="mobile-nav-item">
+          <FaHome />
+        </Link>
+        <Link to="/shop" aria-label="Shop" className="mobile-nav-item">
+          <FaShoppingBasket />
+        </Link>
+        <button className="mobile-nav-item" type="button" onClick={() => searchInputRef.current?.focus()} aria-label="Search">
+          <FaSearch />
+        </button>
+        <button className="mobile-nav-item" type="button" onClick={() => (isAuthenticated ? logout() : navigate('/login'))} aria-label="Profile">
+          {isAuthenticated ? <IoMdLogOut /> : <IoPerson />}
+        </button>
       </div>
 
       {/* SEARCH */}
