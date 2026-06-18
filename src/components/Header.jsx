@@ -35,6 +35,7 @@ export default function Header() {
 
   const dropdownRefs = useRef({});
   const searchContainerRef = useRef(null);
+  const searchInputRef = useRef(null);
   const resultsContainerRef = useRef(null);
 
   const navigate = useNavigate();
@@ -221,10 +222,12 @@ export default function Header() {
           className={`search-container ${
             searchFocused || searchValue ? 'focused' : ''
           }`}
+          onClick={() => searchInputRef.current?.focus()}
         >
           <FaSearch />
 
           <input
+            ref={searchInputRef}
             className="search-input"
             value={searchValue}
             placeholder="Search pages & sections..."
@@ -234,6 +237,7 @@ export default function Header() {
 
           {searchValue && (
             <button
+              type="button"
               onClick={() => {
                 setSearchValue('');
                 setDebouncedValue('');

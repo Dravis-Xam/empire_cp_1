@@ -28,24 +28,23 @@ export const AuthProvider = ({ children }) => {
   });
 
   // Intercept the token parameter BEFORE making our backend calls
-  // useEffect(() => {
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   const tokenFromUrl = urlParams.get('token');
-
-  //   if (tokenFromUrl) {
-  //     // 1. Commit token directly to storage
-  //     localStorage.setItem('token', tokenFromUrl);
-
-  //     // 2. Clear query string parameters from browser address bar
-  //     window.history.replaceState({}, document.title, window.location.pathname);
-  //   }
-
-  //   // 3. Now run the profile verification check safely
-  //   checkAuth();
-  // }, []);
-
   useEffect(() => {
-    checkAuth()
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromUrl = urlParams.get('token');
+
+    if (tokenFromUrl) {
+      // 1. Commit token directly to storage
+      localStorage.setItem('token', tokenFromUrl);
+
+      // 2. Remove the token query from the URL
+      urlParams.delete('token');
+      const newSearch = urlParams.toString();
+      const newUrl = `${window.location.pathname}${newSearch ? `?${newSearch}` : ''}`;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+
+    // 3. Now run the profile verification check safely
+    checkAuth();
   }, []);
 
   const checkAuth = async () => {
