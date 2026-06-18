@@ -415,7 +415,7 @@ export const meta = {
     "google login",
     "facebook login"
   ],
-  url: "/auth"
+  url: "/login"
 };
 
 export const searchSections = [

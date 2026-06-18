@@ -32,6 +32,12 @@ export default function Header() {
   const [searchValue, setSearchValue] = useState('');
   const [debouncedValue, setDebouncedValue] = useState('');
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === 'undefined') return 'light';
+    const savedTheme = window.localStorage.getItem('theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
 
   const dropdownRefs = useRef({});
   const searchContainerRef = useRef(null);
@@ -90,6 +96,15 @@ export default function Header() {
   useEffect(() => {
     setActiveIndex(-1);
   }, [searchValue]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    window.localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // ---------------- SEARCH ----------------
   const searchResults = useMemo(() => {
@@ -272,6 +287,26 @@ export default function Header() {
             </div>
           )}
         </div>
+
+        {/* THEME TOGGLE */}
+        <button
+          type="button"
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+        >
+          <div className={`theme-toggle-icon ${theme}`}>
+            <span className="theme-center" />
+            <span className="theme-ray ray-1" />
+            <span className="theme-ray ray-2" />
+            <span className="theme-ray ray-3" />
+            <span className="theme-ray ray-4" />
+            <span className="theme-ray ray-5" />
+            <span className="theme-ray ray-6" />
+            <span className="theme-ray ray-7" />
+            <span className="theme-ray ray-8" />
+          </div>
+        </button>
 
         {/* CART */}
         <span onClick={openCart}>
