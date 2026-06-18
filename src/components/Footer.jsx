@@ -68,9 +68,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="footer-col brand-col">
             <div className="footer-logo">
-              <IoMdFlash className="logo-icon" />
-              <span>Empire Hub</span>
-              <span className="logo-badge">Phones</span>
+              <span>Empire Hub Phones</span>
             </div>
             <p className="footer-description">
               Your premier destination for the latest smartphones, laptops, 

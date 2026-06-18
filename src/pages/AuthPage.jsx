@@ -16,7 +16,7 @@ import { IoMdFlash } from 'react-icons/io';
 import useAuth from '../hooks/useAuth';
 import '../styles/AuthPage.css';
 
-const AuthPage = () => {
+function AuthPage () {
   const navigate = useNavigate();
   const { login, register, loading, error, isAuthenticated } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
@@ -149,16 +149,14 @@ const AuthPage = () => {
         <div className="brand-section">
           <div className="brand-content">
             <div className="logo">
-              <IoMdFlash className="logo-icon" />
-              <span className="logo-text">Empire Hub</span>
-              <span className="logo-badge">Electronics</span>
+              <span className="logo-text">Empire Hub Phones</span>
             </div>
             <h1 className="brand-title">
-              {isLogin ? 'Power up your account' : 'Join the tech revolution'}
+              {isLogin ? 'Looking to upgrade your device?' : 'Reward yourself with a quality phone from us today'}
             </h1>
             <p className="brand-subtitle">
               {isLogin 
-                ? 'Access your dashboard and track your electronics' 
+                ? 'We have all latest and XUK devices that meet your digital needs' 
                 : 'Get the best deals on laptops, phones, and gadgets'}
             </p>
             <div className="stats">
@@ -247,7 +245,7 @@ const AuthPage = () => {
                     </div>
                   </div>
 
-                  <div id="role-selection" className="form-group">
+                  {/* <div id="role-selection" className="form-group">
                     <div className={`input-wrapper ${focusedField === 'role' || formData.role ? 'focused' : ''}`}>
                       <FcBusiness className="input-icon" />
                       <select
@@ -266,7 +264,7 @@ const AuthPage = () => {
                       <label htmlFor="role" className="floating-label">Role</label>
                       <div className="input-underline"></div>
                     </div>
-                  </div>
+                  </div> */}
                 </>
               )}
 
@@ -397,7 +395,7 @@ const AuthPage = () => {
   );
 };
 
-export const meta = {
+export const _meta = {
   title: "Authentication",
   description:
     "Login and registration page for Empire Hub users, including OAuth and role-based access.",

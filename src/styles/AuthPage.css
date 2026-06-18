@@ -486,7 +486,10 @@
   text-align: center;
   margin-top: 32px;
   font-size: 14px;
-  color: var(--auth-text-muted);
+}
+
+.switch-container > p {
+  color: rgb(133, 133, 133);
 }
 
 .switch-mode-btn {

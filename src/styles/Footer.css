@@ -1,7 +1,7 @@
 /* src/styles/Footer.css */
 
 .footer {
-  background: var(--bg-glass);
+  background: var(--primary);
   color: var(--text);
   position: relative;
   z-index: 10;
@@ -114,7 +114,7 @@
 .social-link:hover {
   background: linear-gradient(135deg, var(--primary), var(--primary-hover));
   transform: translateY(-3px);
-  color: white;
+  color: var(--text);
 }
 
 /* Footer Titles */
@@ -124,7 +124,7 @@
   margin-bottom: 20px;
   position: relative;
   display: inline-block;
-  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  background: linear-gradient(135deg, var(--bg-primary), var(--accent));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -137,7 +137,7 @@
   left: 0;
   width: 40px;
   height: 2px;
-  background: linear-gradient(90deg, var(--primary), var(--primary-hover));
+  background: linear-gradient(135deg, var(--bg-primary), var(--accent));
   border-radius: 2px;
 }
 
@@ -181,7 +181,7 @@
 
 .info-label {
   font-weight: 600;
-  color: var(--accent);
+  color: var(--text-primary);
   min-width: 60px;
 }
 
@@ -224,7 +224,7 @@
   border-radius: 40px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: rgba(255, 255, 255, 0.08);
-  color: white;
+  color: var(--text);
   font-size: 14px;
   min-width: 280px;
   transition: all 0.3s ease;
@@ -245,7 +245,7 @@
   border-radius: 40px;
   border: none;
   background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  color: white;
+  color: var(--text);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -302,7 +302,7 @@
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary), var(--primary-hover));
   border: none;
-  color: white;
+  color: var(--text);
   font-size: 24px;
   cursor: pointer;
   display: flex;

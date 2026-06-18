@@ -18,7 +18,7 @@ function buildIndex() {
   const toString = (v) => (typeof v === "string" ? v : "");
 
   rawIndex = Object.entries(pages).flatMap(([path, module]) => {
-    const meta = module?.meta || {};
+    const meta = module?._meta || {};
     const sections = toArray(module?.searchSections);
 
     const pageUrl =
