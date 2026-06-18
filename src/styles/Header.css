@@ -27,7 +27,7 @@
   --text: #ffffff;
   --primary: #4169E1;
   --primary-hover: #5a7ee5;
-  --bg-dark: rgba(0, 0, 0, 0.216);
+  --bg-dark: rgba(0, 0, 0, 0.378);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-hover: rgba(255, 255, 255, 0.15);
   --dropdown-bg: rgba(20, 25, 45, 0.95);
@@ -43,7 +43,7 @@
   position: fixed;
   top: 20px;
   border-radius: 100px;
-  background-color: rgba(0, 0, 0, 0.25);
+  background-color: var(--header-bg);
   backdrop-filter: blur(12px);
   left: 50%;
   transform: translateX(-50%);
