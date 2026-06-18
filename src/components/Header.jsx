@@ -10,6 +10,8 @@ import {
   FaUser,
   FaGamepad,
   FaHome,
+  FaSun,
+  FaMoon,
 } from 'react-icons/fa';
 
 import { FaMobile } from 'react-icons/fa6';
@@ -231,7 +233,7 @@ export default function Header() {
         <Link className='nav-link nav-container' to="/about">About</Link>
       </div>
 
-      {/* MOBILE FLOATING NAV */}
+      {/* MOBILE FLOATING NAV - Hidden on desktop */}
       <div className="mobile-bottom-nav">
         <Link to="/" aria-label="Home" className="mobile-nav-item">
           <FaHome />
@@ -305,7 +307,7 @@ export default function Header() {
           )}
         </div>
 
-        {/* THEME TOGGLE */}
+        {/* MAGICAL THEME TOGGLE - Sun/Moon */}
         <button
           type="button"
           className="theme-toggle-btn"
@@ -313,15 +315,7 @@ export default function Header() {
           aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
         >
           <div className={`theme-toggle-icon ${theme}`}>
-            <span className="theme-center" />
-            <span className="theme-ray ray-1" />
-            <span className="theme-ray ray-2" />
-            <span className="theme-ray ray-3" />
-            <span className="theme-ray ray-4" />
-            <span className="theme-ray ray-5" />
-            <span className="theme-ray ray-6" />
-            <span className="theme-ray ray-7" />
-            <span className="theme-ray ray-8" />
+            {theme === 'dark' ? <FaMoon /> : <FaSun />}
           </div>
         </button>
 
