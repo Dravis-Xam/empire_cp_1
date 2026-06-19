@@ -72,55 +72,31 @@ const productCatalog = [
   },
 ];
 
+const sitePagesConfig = [
+  { id: 'page-home', type: 'page', title: 'Home', description: 'Welcome to Empire Store', keywords: ['home', 'main', 'landing'], url: '/' },
+  { id: 'page-shop', type: 'page', title: 'Shop', description: 'Browse our latest tech catalog', keywords: ['products', 'store', 'buy', 'electronics'], url: '/shop' },
+  { id: 'page-cart', type: 'page', title: 'Cart', description: 'View your selected items', keywords: ['cart', 'basket', 'checkout'], url: '/cart' },
+  { id: 'page-checkout', type: 'page', title: 'Checkout', description: 'Complete your purchase', keywords: ['pay', 'buy', 'finalize'], url: '/checkout' },
+  { id: 'page-info', type: 'page', title: 'Info', description: 'About our brand and support', keywords: ['about', 'help', 'contact'], url: '/info' }
+]
+
 /**
  * Build index ONCE safely (singleton)
  */
 function buildIndex() {
   if (indexBuilt) return;
 
-  const pages = import.meta.glob("/src/pages/**/*.{jsx,tsx}", {
-    eager: true,
-  });
+  // 1. Map pages directly from the config array (No eager imports!)
+  const pageEntries = sitePagesConfig.map(page => ({
+    id: page.id,
+    type: "page",
+    title: page.title,
+    description: page.description,
+    keywords: page.keywords,
+    url: page.url,
+  }));
 
-  const toArray = (v) => (Array.isArray(v) ? v : []);
-  const toString = (v) => (typeof v === "string" ? v : "");
-
-  // Page and section entries
-  const pageEntries = Object.entries(pages).flatMap(([path, module]) => {
-    const meta = module?._meta || {};
-    const sections = toArray(module?.searchSections);
-
-    const pageUrl =
-      meta.url ||
-      path
-        .replace("/src/pages", "")
-        .replace(/\.(jsx|tsx)$/, "")
-        .replace(/\/index$/, "");
-
-    const pageEntry = {
-      id: `page-${pageUrl}`,
-      type: "page",
-      title: toString(meta.title || pageUrl),
-      description: toString(meta.description),
-      keywords: toArray(meta.keywords).map(toString),
-      url: pageUrl,
-    };
-
-    const sectionEntries = sections.map((s, i) => ({
-      id: `section-${pageUrl}-${i}`,
-      type: "section",
-      title: toString(s.title),
-      description: toString(s.description),
-      keywords: toArray(s.keywords).map(toString),
-      url: s.anchor ? `${pageUrl}#${s.anchor}` : pageUrl,
-      pageUrl,
-      anchor: toString(s.anchor),
-    }));
-
-    return [pageEntry, ...sectionEntries];
-  });
-
-  // Product entries
+  // 2. Product entries (Keep exactly as you wrote it)
   const productEntries = productCatalog.map(product => ({
     id: `product-${product.id}`,
     type: 'product',
@@ -133,7 +109,7 @@ function buildIndex() {
     details: product.details,
   }));
 
-  // Order entries from localStorage
+  // 3. Order entries from localStorage (Keep exactly as you wrote it)
   const orderEntries = [];
   try {
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
@@ -171,6 +147,7 @@ function buildIndex() {
 
   indexBuilt = true;
 }
+
 
 /**
  * Force rebuild index (call when cart/orders change)
