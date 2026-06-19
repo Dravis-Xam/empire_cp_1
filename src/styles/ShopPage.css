@@ -94,7 +94,6 @@
 .shop-slider::-webkit-scrollbar-thumb {
   background: rgba(65, 105, 225, 0.3);
   border-radius: 10px;
-  transition: background 0.3s;
 }
 
 .shop-slider::-webkit-scrollbar-thumb:hover {
