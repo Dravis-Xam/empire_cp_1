@@ -46,3 +46,22 @@
   background: var(--bg-glass-hover);
   transform: translateX(-4px);
 }
+
+@media (max-width: 720px) {
+  .info-page {
+    padding: 100px 16px 80px;
+  }
+
+  .info-card {
+    padding: var(--spacing-lg);
+  }
+
+  .info-card h1 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .info-back {
+    width: 100%;
+    text-align: center;
+  }
+}

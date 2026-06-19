@@ -16,7 +16,7 @@ import { IoMdFlash } from 'react-icons/io';
 import useAuth from '../hooks/useAuth';
 import '../styles/AuthPage.css';
 
-function AuthPage () {
+function AuthPage ({props = {}}) {
   const navigate = useNavigate();
   const { login, register, loading, error, isAuthenticated } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
@@ -73,7 +73,7 @@ function AuthPage () {
     e.preventDefault();
     setFormError('');
 
-    if (isLogin) {
+    if (isLogin || props.props === "login") {
       if (!formData.username || !formData.password) {
         setFormError('Please enter both username and password');
         setShowError(true);
@@ -152,11 +152,11 @@ function AuthPage () {
               <span className="logo-text">Empire Hub Phones</span>
             </div>
             <h1 className="brand-title">
-              {isLogin ? 'Looking to upgrade your device?' : 'Reward yourself with a quality phone from us today'}
+              {isLogin || props.props === "login" ? 'Looking to upgrade your device?' : 'Reward yourself with a quality phone from us today'}
             </h1>
             <p className="brand-subtitle">
-              {isLogin 
-                ? 'We have all latest and XUK devices that meet your digital needs' 
+              {isLogin || props.props === "login"
+                ? 'We have all latest and XUK devices that meet your digital needs'
                 : 'Get the best deals on laptops, phones, and gadgets'}
             </p>
             <div className="stats">
@@ -182,9 +182,9 @@ function AuthPage () {
         <div className="form-section">
           <div className="form-wrapper">
             <div id="sign-in-form" className="form-header">
-              <h2>{isLogin ? 'Sign In' : 'Sign Up'}</h2>
+              <h2>{isLogin || props.props === "login" ? 'Sign In' : 'Sign Up'}</h2>
               <p className="form-subtitle">
-                {isLogin ? 'Welcome back to Empire Hub!' : 'Create your account to start shopping'}
+                {isLogin || props.props === "login" ? 'Welcome back to Empire Hub!' : 'Create your account to start shopping'}
               </p>
             </div>
 
@@ -203,7 +203,7 @@ function AuthPage () {
             )}
 
             <form onSubmit={handleSubmit} className="auth-form">
-              {!isLogin && (
+              {(!isLogin && props.props !== "login") && (
                 <>
                   <div id="sign-up-form" className="form-group">
                     <div className={`input-wrapper ${focusedField === 'name' || formData.name ? 'focused' : ''}`}>
@@ -327,8 +327,8 @@ function AuthPage () {
                   </>
                 ) : (
                   <>
-                    {isLogin ? <FiLogIn /> : <FiUserPlus />}
-                    {isLogin ? 'Sign In' : 'Create Account'}
+                    {isLogin || props.props === "login" ? <FiLogIn /> : <FiUserPlus />}
+                    {isLogin || props.props === "login" ? 'Sign In' : 'Create Account'}
                   </>
                 )}
               </button>
@@ -367,10 +367,10 @@ function AuthPage () {
 
             <div className="switch-container">
               <p>
-                {isLogin ? "Don't have an account? " : "Already have an account? "}
+                {isLogin || props.props === "login" ? "Don't have an account? " : "Already have an account? "}
                 <button 
                   onClick={() => {
-                    setIsLogin(!isLogin);
+                    setIsLogin(!isLogin && props.props !== "login");
                     setFormError('');
                     setShowError(true);
                     setFormData({
@@ -383,7 +383,7 @@ function AuthPage () {
                   }}
                   className="switch-mode-btn"
                 >
-                  {isLogin ? 'Create one' : 'Sign in'}
+                  {isLogin || props.props === "login" ? 'Create one' : 'Sign in'}
                   <FiArrowRight className="switch-icon" />
                 </button>
               </p>

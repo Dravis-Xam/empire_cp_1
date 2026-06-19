@@ -180,60 +180,143 @@ export default function Header() {
   const openCart = () => navigate('/cart');
 
   return (
-    <div className="header">
-      <Link to="/" className="home-link">
-        Empire Hub Phones
-      </Link>
+    <>
+      <div className="header">
+        <Link to="/" className="home-link">
+          Empire Hub Phones
+        </Link>
 
-      {/* NAV */}
-      <div className="nav">
-        <div
-          className={`nav-container ${
-            activeDropdown === 'featured' ? 'active' : ''
-          }`}
-          ref={(el) => (dropdownRefs.current.featured = el)}
-        >
-          <div onClick={() => handleDropdownToggle('featured')}>
-            Featured <FaChevronDown />
+        {/* NAV */}
+        <div className="nav">
+          <div
+            className={`nav-container ${
+              activeDropdown === 'featured' ? 'active' : ''
+            }`}
+            ref={(el) => (dropdownRefs.current.featured = el)}
+          >
+            <div onClick={() => handleDropdownToggle('featured')}>
+              Featured <FaChevronDown />
+            </div>
+
+            {activeDropdown === 'featured' && (
+              <div className="dropdown-container">
+                {featuredItems.map((i, idx) => (
+                  <Link key={idx} to={i.link}>
+                    {i.icon} {i.name}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
-          {activeDropdown === 'featured' && (
-            <div className="dropdown-container">
-              {featuredItems.map((i, idx) => (
-                <Link key={idx} to={i.link}>
-                  {i.icon} {i.name}
-                </Link>
-              ))}
+          <div
+            className={`nav-container ${
+              activeDropdown === 'categories' ? 'active' : ''
+            }`}
+            ref={(el) => (dropdownRefs.current.categories = el)}
+          >
+            <div onClick={() => handleDropdownToggle('categories')}>
+              Categories <FaChevronDown />
             </div>
-          )}
-        </div>
 
-        <div
-          className={`nav-container ${
-            activeDropdown === 'categories' ? 'active' : ''
-          }`}
-          ref={(el) => (dropdownRefs.current.categories = el)}
-        >
-          <div onClick={() => handleDropdownToggle('categories')}>
-            Categories <FaChevronDown />
+            {activeDropdown === 'categories' && (
+              <div className="dropdown-container">
+                {categoryItems.map((i, idx) => (
+                  <Link key={idx} to={i.link}>
+                    {i.icon} {i.name}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
-          {activeDropdown === 'categories' && (
-            <div className="dropdown-container">
-              {categoryItems.map((i, idx) => (
-                <Link key={idx} to={i.link}>
-                  {i.icon} {i.name}
-                </Link>
-              ))}
-            </div>
-          )}
+          <Link className='nav-link nav-container' to="/contact">Contact</Link>
+          <Link className='nav-link nav-container' to="/about">About</Link>
         </div>
 
-        <Link className='nav-link nav-container' to="/contact">Contact</Link>
-        <Link className='nav-link nav-container' to="/about">About</Link>
+        {/* SEARCH */}
+        <div className="right-actions">
+          <div
+            ref={searchContainerRef}
+            className={`search-container ${
+              searchFocused || searchValue ? 'focused' : ''
+            }`}
+            onClick={() => searchInputRef.current?.focus()}
+          >
+            <FaSearch />
+
+            <input
+              ref={searchInputRef}
+              className="search-input"
+              value={searchValue}
+              placeholder="Search pages & sections..."
+              onChange={(e) => setSearchValue(e.target.value)}
+              onFocus={() => setSearchFocused(true)}
+            />
+
+            {searchValue && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchValue('');
+                  setDebouncedValue('');
+                }}
+              >
+                ✕
+              </button>
+            )}
+
+            {/* RESULTS */}
+            {searchFocused && searchValue && (
+              <div
+                className="search-results-container"
+                ref={resultsContainerRef}
+              >
+                {searchResults.length === 0 ? (
+                  <div>No results found</div>
+                ) : (
+                  searchResults.map((item, idx) => (
+                    <div
+                      key={item.id}
+                      className={`search-result-item ${
+                        idx === activeIndex ? 'active' : ''
+                      }`}
+                      onClick={() => handleResultClick(item)}
+                    >
+                      <span className="tag">{item.type}</span>
+                      <span>{item.title}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* MAGICAL THEME TOGGLE - Sun/Moon */}
+          <button
+            type="button"
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            <div className={`theme-toggle-icon ${theme}`}>
+              {theme === 'dark' ? <FaMoon /> : <FaSun />}
+            </div>
+          </button>
+
+          {/* CART */}
+          <span onClick={openCart}>
+            <FaShoppingBasket />
+          </span>
+
+          {/* AUTH */}
+          <button className='login-btn' onClick={() => (isAuthenticated ? logout() : navigate('/login'))}>
+            {isAuthenticated ? <IoMdLogOut /> : <IoPerson />}
+          </button>
+        </div>
       </div>
 
-      {/* MOBILE FLOATING NAV - Hidden on desktop */}
+      {/* MOBILE FLOATING NAV - Rendered outside header */}
       <div className="mobile-bottom-nav">
         <Link to="/" aria-label="Home" className="mobile-nav-item">
           <FaHome />
@@ -248,87 +331,6 @@ export default function Header() {
           {isAuthenticated ? <IoMdLogOut /> : <IoPerson />}
         </button>
       </div>
-
-      {/* SEARCH */}
-      <div className="right-actions">
-        <div
-          ref={searchContainerRef}
-          className={`search-container ${
-            searchFocused || searchValue ? 'focused' : ''
-          }`}
-          onClick={() => searchInputRef.current?.focus()}
-        >
-          <FaSearch />
-
-          <input
-            ref={searchInputRef}
-            className="search-input"
-            value={searchValue}
-            placeholder="Search pages & sections..."
-            onChange={(e) => setSearchValue(e.target.value)}
-            onFocus={() => setSearchFocused(true)}
-          />
-
-          {searchValue && (
-            <button
-              type="button"
-              onClick={() => {
-                setSearchValue('');
-                setDebouncedValue('');
-              }}
-            >
-              ✕
-            </button>
-          )}
-
-          {/* RESULTS */}
-          {searchFocused && searchValue && (
-            <div
-              className="search-results-container"
-              ref={resultsContainerRef}
-            >
-              {searchResults.length === 0 ? (
-                <div>No results found</div>
-              ) : (
-                searchResults.map((item, idx) => (
-                  <div
-                    key={item.id}
-                    className={`search-result-item ${
-                      idx === activeIndex ? 'active' : ''
-                    }`}
-                    onClick={() => handleResultClick(item)}
-                  >
-                    <span className="tag">{item.type}</span>
-                    <span>{item.title}</span>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* MAGICAL THEME TOGGLE - Sun/Moon */}
-        <button
-          type="button"
-          className="theme-toggle-btn"
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-        >
-          <div className={`theme-toggle-icon ${theme}`}>
-            {theme === 'dark' ? <FaMoon /> : <FaSun />}
-          </div>
-        </button>
-
-        {/* CART */}
-        <span onClick={openCart}>
-          <FaShoppingBasket />
-        </span>
-
-        {/* AUTH */}
-        <button className='login-btn' onClick={() => (isAuthenticated ? logout() : navigate('/login'))}>
-          {isAuthenticated ? <IoMdLogOut /> : <IoPerson />}
-        </button>
-      </div>
-    </div>
+    </>
   );
 }

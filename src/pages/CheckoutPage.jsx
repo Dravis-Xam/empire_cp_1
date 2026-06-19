@@ -4,6 +4,22 @@ import useCart from '../hooks/useCart';
 import checkoutService from '../services/checkout';
 import '../styles/CheckoutPage.css';
 
+export const _meta = {
+  title: 'Checkout',
+  description: 'Complete your Empire Hub order with a secure MPESA-like payment flow.',
+  keywords: ['checkout', 'mpesa', 'payment', 'order', 'payment request'],
+  url: '/checkout',
+};
+
+export const searchSections = [
+  {
+    title: 'Checkout Form',
+    anchor: 'checkout-form',
+    description: 'Enter MPESA details and submit your payment request.',
+    keywords: ['checkout', 'mpesa', 'phone', 'payment reference'],
+  },
+];
+
 const CheckoutPage = () => {
   const { cart, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();

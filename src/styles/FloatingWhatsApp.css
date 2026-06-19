@@ -1,0 +1,126 @@
+/* Floating WhatsApp Chat Button */
+.floating-whatsapp {
+  position: fixed;
+  right: 0;
+  bottom: 150px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.whatsapp-bubble {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #25d366, #1fa855);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.whatsapp-bubble:hover {
+  transform: scale(1.1) translateX(-8px);
+  box-shadow: 0 6px 28px rgba(37, 211, 102, 0.6);
+}
+
+.whatsapp-bubble:active {
+  transform: scale(0.95) translateX(-8px);
+}
+
+.whatsapp-icon {
+  font-size: 32px;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.whatsapp-bubble:hover .whatsapp-icon {
+  transform: scale(1.15);
+}
+
+/* Tooltip */
+.whatsapp-tooltip {
+  background: linear-gradient(135deg, #25d366, #1fa855);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+  animation: tooltipSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  position: relative;
+}
+
+.whatsapp-tooltip::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid #1fa855;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+@keyframes tooltipSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .floating-whatsapp {
+    right: 8px;
+    bottom: auto;
+    bottom: 80px;
+    transform: none;
+    gap: 8px;
+  }
+
+  .whatsapp-bubble {
+    width: 50px;
+    height: 50px;
+  }
+
+  .whatsapp-icon {
+    font-size: 26px;
+  }
+
+  .whatsapp-bubble:hover {
+    transform: scale(1.1) translateY(-4px);
+  }
+
+  .whatsapp-bubble:active {
+    transform: scale(0.95) translateY(-4px);
+  }
+
+  .whatsapp-tooltip {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 8px;
+  }
+
+  .whatsapp-tooltip::after {
+    right: 50%;
+    transform: translateX(50%) rotate(90deg);
+    bottom: -6px;
+    top: auto;
+    border-left: 6px solid #1fa855;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+}

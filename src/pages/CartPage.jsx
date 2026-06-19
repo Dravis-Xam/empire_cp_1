@@ -3,6 +3,22 @@ import { useNavigate, Link } from 'react-router-dom';
 import useCart from '../hooks/useCart';
 import '../styles/CartPage.css';
 
+export const _meta = {
+  title: 'Your Cart',
+  description: 'Review the items in your cart, update quantities, and continue to MPESA checkout.',
+  keywords: ['cart', 'shopping cart', 'checkout', 'order summary', 'mpesa'],
+  url: '/cart',
+};
+
+export const searchSections = [
+  {
+    title: 'Cart Summary',
+    anchor: 'cart-summary',
+    description: 'Review your cart items, adjust quantities, and manage your order.',
+    keywords: ['cart', 'items', 'quantity', 'remove', 'order'],
+  },
+];
+
 const CartPage = () => {
   const { cart, updateQuantity, removeItem, totalItems, totalPrice } = useCart();
   const navigate = useNavigate();

@@ -105,6 +105,13 @@ export const meta = {
   url: '/shop',
 };
 
+export const _meta = {
+  title: 'Shop',
+  description: 'Browse products in the Empire Hub shop and open details for each item.',
+  keywords: ['shop', 'products', 'electronics', 'smartphones', 'laptops', 'tablets'],
+  url: '/shop',
+};
+
 export const searchSections = [
   {
     title: 'Shop Categories',

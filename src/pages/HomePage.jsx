@@ -1,14 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import '../styles/HomePage.css'
 
 export default function HomePage() {
   return (
     <div className='homepage'>
-      <Header />
-
       <main className='home-main'>
         <section className='home-hero'>
           <div>
@@ -43,8 +39,6 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
@@ -52,6 +46,13 @@ export default function HomePage() {
 export const meta = {
   title: 'Empire Hub Home',
   description: 'Welcome to Empire Hub, a modern electronics store with fast checkout and product discovery.',
+  url: '/',
+}
+
+export const _meta = {
+  title: 'Empire Hub Home',
+  description: 'Welcome to Empire Hub, a modern electronics store with fast checkout and product discovery.',
+  keywords: ['home', 'electronics', 'mpesa', 'shop', 'store'],
   url: '/',
 }
 

@@ -106,3 +106,26 @@
   cursor: not-allowed;
   transform: none;
 }
+
+@media (max-width: 720px) {
+  .checkout-page {
+    padding: 100px 16px 80px;
+  }
+
+  .checkout-card {
+    padding: var(--spacing-lg);
+  }
+
+  .checkout-summary {
+    gap: var(--spacing-sm);
+  }
+
+  .checkout-form input,
+  .checkout-form textarea {
+    padding: 12px 14px;
+  }
+
+  .checkout-submit {
+    width: 100%;
+  }
+}

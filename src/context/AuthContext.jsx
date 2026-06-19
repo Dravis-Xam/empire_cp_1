@@ -13,7 +13,10 @@ export const useAuthContext = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loginSave, setLoginSave] = useState(() => {
@@ -54,9 +57,23 @@ export const AuthProvider = ({ children }) => {
       localStorage.getItem("savedlogin") || "{}"
     );
 
+    const cachedUser = JSON.parse(
+      localStorage.getItem('user') || 'null'
+    );
+
+    if (cachedUser) {
+      setUser(cachedUser);
+      setLoading(false);
+    }
+
     // Neither token nor previous login exists
     if (!token && !savedLogin?.isAuthenticated) {
       setUser(null);
+      setLoading(false);
+      return;
+    }
+
+    if (!navigator.onLine) {
       setLoading(false);
       return;
     }
@@ -67,6 +84,7 @@ export const AuthProvider = ({ children }) => {
       const currentUser = await api.getCurrentUser();
 
       setUser(currentUser);
+      localStorage.setItem('user', JSON.stringify(currentUser));
 
       const loginData = {
         id: currentUser.id,
@@ -85,6 +103,7 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.removeItem("savedlogin");
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
 
       setLoginSave({
         id: null,
@@ -102,6 +121,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       const newUser = await api.register(userData);
       setUser(newUser);
+      localStorage.setItem('user', JSON.stringify(newUser));
+      if (newUser?.token) {
+        localStorage.setItem('token', newUser.token);
+      }
       setError(null);
       return { success: true, user: newUser };
     } catch (err) {
@@ -117,6 +140,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       const loggedInUser = await api.login(credentials);
       setUser(loggedInUser);
+      localStorage.setItem('user', JSON.stringify(loggedInUser));
+      if (loggedInUser?.token) {
+        localStorage.setItem('token', loggedInUser.token);
+      }
       setError(null);
       const loginData = {
         id: loggedInUser.id,
@@ -167,6 +194,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       localStorage.removeItem("savedlogin");
       localStorage.removeItem("token");
+      localStorage.removeItem('user');
 
       setLoginSave({
         id: null,

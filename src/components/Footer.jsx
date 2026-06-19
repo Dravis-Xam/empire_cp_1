@@ -37,12 +37,12 @@ export default function Footer() {
   ]
 
   const categories = [
-    { name: "Smartphones", link: "/category/phones" },
-    { name: "Laptops", link: "/category/laptops" },
-    { name: "Tablets", link: "/category/tablets" },
-    { name: "Audio", link: "/category/audio" },
-    { name: "Gaming", link: "/category/gaming" },
-    { name: "Accessories", link: "/category/accessories" }
+    { name: "Smartphones", link: "/shop#phones" },
+    { name: "Laptops", link: "/shop#laptops" },
+    { name: "Tablets", link: "/shop#tablets" },
+    { name: "Audio", link: "/shop#audio" },
+    { name: "Gaming", link: "/shop#gaming" },
+    { name: "Accessories", link: "/shop#accessories" }
   ]
 
   const services = [
@@ -54,7 +54,7 @@ export default function Footer() {
 
   const storeInfo = {
     address: "Bazaar Plaza, M1 Shop A2, Moi Avenue, Nairobi",
-    phone: "+254711485096",
+    phone: "+254711489056",
     email: "dansonkiio@gmail.com",
     hours: "Mon-Sat: 9AM - 8PM"
   }
@@ -77,16 +77,16 @@ export default function Footer() {
             </p>
             {/* Social Links - Icons Only */}
             <div className="social-links">
-              <a href="https://www.google.com/url?sa=i&source=web&rct=j&url=https://www.facebook.com/empirehubphones/&ved=2ahUKEwj80p_R6YiVAxWBKvsDHdp0MbAQy_kOegoIAggACAAIAxAB&opi=89978449&cd&psig=AOvVaw0NTlEl3P4IxmKrU3fjHIvW&ust=1781598471014000" target='_blank' className="social-link" aria-label="Facebook">
+              <a href="https://www.google.com/url?sa=i&source=web&rct=j&url=https://www.facebook.com/empirehubphones/&ved=2ahUKEwj80p_R6YiVAxWBKvsDHdp0MbAQy_kOegoIAggACAAIAxAB&opi=89978449&cd&psig=AOvVaw0NTlEl3P4IxmKrU3fjHIvW&ust=1781598471014000" target='_blank' rel="noreferrer noopener" className="social-link" aria-label="Facebook">
                 <FaFacebook />
               </a>
-              <a href="https://x.com/empirehub_254" target='_blank' className="social-link" aria-label="X">
+              <a href="https://x.com/empirehub_254" target='_blank' rel="noreferrer noopener" className="social-link" aria-label="X">
                 <FaX />
               </a>
-              <a href="https://www.google.com/url?sa=i&source=web&rct=j&url=https://www.instagram.com/empire_phone_hub/&ved=2ahUKEwj80p_R6YiVAxWBKvsDHdp0MbAQy_kOegoIAggACAAIBhAF&opi=89978449&cd&psig=AOvVaw0NTlEl3P4IxmKrU3fjHIvW&ust=1781598471014000" target='_blank' className="social-link" aria-label="Instagram">
+              <a href="https://www.google.com/url?sa=i&source=web&rct=j&url=https://www.instagram.com/empire_phone_hub/&ved=2ahUKEwj80p_R6YiVAxWBKvsDHdp0MbAQy_kOegoIAggACAAIBhAF&opi=89978449&cd&psig=AOvVaw0NTlEl3P4IxmKrU3fjHIvW&ust=1781598471014000" target='_blank' rel="noreferrer noopener" className="social-link" aria-label="Instagram">
                 <FaInstagram />
               </a>
-              <a href="https://www.tiktok.com/@empirehub3" target='_blank' className="social-link" aria-label="TikTok">
+              <a href="https://www.tiktok.com/@empirehub3" target='_blank' rel="noreferrer noopener" className="social-link" aria-label="TikTok">
                 <FaTiktok />
               </a>
             </div>
@@ -110,7 +110,7 @@ export default function Footer() {
             <ul className="footer-links">
               {categories.map((category, index) => (
                 <li key={index}>
-                  <Link to={`/shop#${category.name.toLowerCase()}`}>{category.name}</Link>
+                  <Link to={category.link}>{category.name}</Link>
                 </li>
               ))}
             </ul>
@@ -134,15 +134,21 @@ export default function Footer() {
             <ul className="contact-info">
               <li>
                 <span className="info-label">Address:</span>
-                <span>{storeInfo.address}</span>
+                <a href={`https://maps.google.com/?q=${storeInfo.address}`} target='_blank' rel="noreferrer noopener">
+                  {storeInfo.address}
+                </a>
               </li>
               <li>
                 <span className="info-label">Phone:</span>
-                <span>{storeInfo.phone}</span>
+                <a href={`tel:${storeInfo.phone}`} target='_blank' rel="noreferrer noopener">
+                  {storeInfo.phone}
+                </a>
               </li>
               <li>
                 <span className="info-label">Email:</span>
-                <span>{storeInfo.email}</span>
+                <a href={`mailto:${storeInfo.email}`} target='_blank' rel="noreferrer noopener">
+                  {storeInfo.email}
+                </a>
               </li>
               <li>
                 <span className="info-label">Hours:</span>

@@ -227,4 +227,34 @@
   .cart-grid {
     grid-template-columns: 1fr;
   }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cart-item img {
+    width: 100%;
+    height: auto;
+    max-height: 280px;
+  }
+
+  .cart-item-meta {
+    width: 100%;
+    align-items: flex-start;
+    margin-top: var(--spacing-md);
+  }
+
+  .checkout-link,
+  .checkout-btn,
+  .continue-shopping,
+  .empty-cart-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .cart-grid {
+    grid-template-columns: 1fr;
+  }
 }
