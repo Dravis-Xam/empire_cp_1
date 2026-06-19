@@ -1,9 +1,28 @@
 /* src/styles/ShopPage.css */
 .shop-page {
   padding: 120px 24px 80px;
-  max-width: 1240px;
+  max-width: 100%;
   margin: 0 auto;
   color: var(--text-primary);
+}
+
+.back-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.back-btn:hover {
+  background: rgba(65, 105, 225, 0.2);
+  border-color: rgba(65, 105, 225, 0.5);
+  transform: translateX(-2px);
 }
 
 .shop-hero {
@@ -12,6 +31,9 @@
   align-items: flex-start;
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .shop-hero h1 {
@@ -51,10 +73,39 @@
   color: var(--text-primary);
 }
 
-.shop-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(240px, 1fr));
-  gap: var(--spacing-lg);
+/* Slider Layout */
+.shop-slider {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 20px 0;
+  scroll-behavior: smooth;
+}
+
+.shop-slider::-webkit-scrollbar {
+  height: 8px;
+}
+
+.shop-slider::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.shop-slider::-webkit-scrollbar-thumb {
+  background: rgba(65, 105, 225, 0.3);
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+.shop-slider::-webkit-scrollbar-thumb:hover {
+  background: rgba(65, 105, 225, 0.6);
+}
+
+.slider-track {
+  display: flex;
+  gap: 20px;
+  padding: 0 24px;
+  width: fit-content;
 }
 
 .shop-card {
@@ -64,10 +115,12 @@
   overflow: hidden;
   cursor: pointer;
   transition: all var(--transition-base);
+  flex: 0 0 280px;
+  min-width: 280px;
 }
 
 .shop-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.02);
   box-shadow: var(--shadow-lg);
   background: var(--bg-card-hover);
 }
@@ -194,20 +247,37 @@
   color: white;
   font-weight: 700;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.add-cart-btn:hover {
+.add-cart-btn:hover:not(.added) {
   transform: translateY(-2px);
   box-shadow: var(--shadow-glow);
+}
+
+.add-cart-btn.added {
+  background: linear-gradient(135deg, #25d366, #1fa855);
+  animation: cartAddPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cartAddPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @media (max-width: 1024px) {
   .shop-hero {
     flex-direction: column;
   }
-  .shop-grid {
-    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  .slider-track {
+    padding: 0 16px;
   }
 }
 

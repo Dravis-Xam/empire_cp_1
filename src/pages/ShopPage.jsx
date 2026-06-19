@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useCart from '../hooks/useCart';
 import '../styles/ShopPage.css';
 
@@ -129,7 +129,9 @@ export const searchSections = [
 
 export default function ShopPage() {
   const { hash } = useLocation();
+  const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [addedToCart, setAddedToCart] = useState(null);
   const { addItem } = useCart();
 
   const activeCategory = hash?.replace('#', '') || '';
@@ -148,6 +150,9 @@ export default function ShopPage() {
 
   return (
     <div className="shop-page">
+      {location.pathname !== '/' && (
+        <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
+      )}
       <div className="shop-hero">
         <div>
           <h1>Empire Hub Shop</h1>
@@ -162,21 +167,23 @@ export default function ShopPage() {
         </div>
       </div>
 
-      <div className="shop-grid" id="product-grid">
-        {products.length === 0 ? (
-          <p className="shop-empty">No products found for this category.</p>
-        ) : (
-          products.map((product) => (
-            <div key={product.id} className="shop-card" onClick={() => setSelectedProduct(product)}>
-              <img src={product.image} alt={product.name} />
-              <div className="shop-card-body">
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <span className="price">${product.price.toFixed(2)}</span>
+      <div className="shop-slider" id="product-grid">
+        <div className="slider-track">
+          {products.length === 0 ? (
+            <p className="shop-empty">No products found for this category.</p>
+          ) : (
+            products.map((product) => (
+              <div key={product.id} className="shop-card" onClick={() => setSelectedProduct(product)}>
+                <img src={product.image} alt={product.name} />
+                <div className="shop-card-body">
+                  <h3>{product.name}</h3>
+                  <p>{product.description}</p>
+                  <span className="price">${product.price.toFixed(2)}</span>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
 
       {selectedProduct && (
@@ -195,12 +202,14 @@ export default function ShopPage() {
                 <span>Price: ${selectedProduct.price.toFixed(2)}</span>
               </div>
               <button
-                className="add-cart-btn"
+                className={`add-cart-btn ${addedToCart === selectedProduct.id ? 'added' : ''}`}
                 onClick={() => {
                   addItem(selectedProduct, 1);
+                  setAddedToCart(selectedProduct.id);
+                  setTimeout(() => setAddedToCart(null), 600);
                 }}
               >
-                Add to cart
+                {addedToCart === selectedProduct.id ? '✓ Added!' : 'Add to cart'}
               </button>
             </div>
           </div>

@@ -249,7 +249,7 @@ export default function Header() {
               ref={searchInputRef}
               className="search-input"
               value={searchValue}
-              placeholder="Search pages & sections..."
+              placeholder="Search pages, items, or orders..."
               onChange={(e) => setSearchValue(e.target.value)}
               onFocus={() => setSearchFocused(true)}
             />
@@ -281,6 +281,7 @@ export default function Header() {
                       className={`search-result-item ${
                         idx === activeIndex ? 'active' : ''
                       }`}
+                      data-type={item.type}
                       onClick={() => handleResultClick(item)}
                     >
                       <span className="tag">{item.type}</span>

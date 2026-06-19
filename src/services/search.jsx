@@ -4,6 +4,74 @@ let fuseInstance = null;
 let indexBuilt = false;
 let rawIndex = [];
 
+// Product catalog (synced with ShopPage)
+const productCatalog = [
+  {
+    id: 'phone-1',
+    name: 'Empire Edge Pro',
+    category: 'phones',
+    price: 349.99,
+    description: 'Sleek performance smartphone with a vibrant AMOLED display.',
+    details: '6.5" display, 128GB storage, 48MP camera, 18W fast charge.',
+  },
+  {
+    id: 'phone-2',
+    name: 'Nova Lite',
+    category: 'phones',
+    price: 249.99,
+    description: 'Compact and reliable with long-lasting battery life.',
+    details: '5.8" HD display, 64GB storage, 4000mAh battery.',
+  },
+  {
+    id: 'laptop-1',
+    name: 'Empire AirBook',
+    category: 'laptops',
+    price: 749.99,
+    description: 'Ultra-thin laptop with modern performance and a premium build.',
+    details: 'Intel i5, 16GB RAM, 512GB SSD, 14" FHD display.',
+  },
+  {
+    id: 'tablet-1',
+    name: 'Empire Tab S',
+    category: 'tablets',
+    price: 399.99,
+    description: 'A powerful tablet made for streaming, work, and play.',
+    details: '10.4" display, 128GB storage, octa-core CPU.',
+  },
+  {
+    id: 'audio-1',
+    name: 'Empire Soundbar',
+    category: 'audio',
+    price: 129.99,
+    description: 'Rich home audio with Bluetooth connectivity and bass boost.',
+    details: 'Wireless, 5.1 surround, easy wall mount.',
+  },
+  {
+    id: 'gaming-1',
+    name: 'Empire Gamepad',
+    category: 'gaming',
+    price: 59.99,
+    description: 'Responsive gaming controller with ergonomic grip.',
+    details: 'Wireless, vibration feedback, long battery life.',
+  },
+  {
+    id: 'accessory-1',
+    name: 'Empire Power Bank',
+    category: 'accessories',
+    price: 39.99,
+    description: 'Fast recharge power bank with two ports and compact design.',
+    details: '10000mAh, USB-C, quick charge support.',
+  },
+  {
+    id: 'wearable-1',
+    name: 'Empire Smartwatch',
+    category: 'wearables',
+    price: 199.99,
+    description: 'Fitness-ready smartwatch with sleep tracking and notifications.',
+    details: '24/7 heart rate, GPS, water resistant.',
+  },
+];
+
 /**
  * Build index ONCE safely (singleton)
  */
@@ -17,7 +85,8 @@ function buildIndex() {
   const toArray = (v) => (Array.isArray(v) ? v : []);
   const toString = (v) => (typeof v === "string" ? v : "");
 
-  rawIndex = Object.entries(pages).flatMap(([path, module]) => {
+  // Page and section entries
+  const pageEntries = Object.entries(pages).flatMap(([path, module]) => {
     const meta = module?._meta || {};
     const sections = toArray(module?.searchSections);
 
@@ -51,6 +120,43 @@ function buildIndex() {
     return [pageEntry, ...sectionEntries];
   });
 
+  // Product entries
+  const productEntries = productCatalog.map(product => ({
+    id: `product-${product.id}`,
+    type: 'product',
+    title: product.name,
+    description: product.description,
+    keywords: [product.category, product.details, `${product.price}`, 'electronics'],
+    url: `/shop#${product.category}`,
+    category: product.category,
+    price: product.price,
+    details: product.details,
+  }));
+
+  // Order entries from localStorage
+  const orderEntries = [];
+  try {
+    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+    orders.forEach((order, idx) => {
+      orderEntries.push({
+        id: `order-${idx}`,
+        type: 'order',
+        title: `Order #${idx + 1}`,
+        description: `${order.items?.length || 0} items - Total: KES ${order.totalPrice || 0}`,
+        keywords: ['order', 'purchase', 'checkout', ...(order.items?.map(i => i.name) || [])],
+        url: '/checkout',
+        orderIndex: idx,
+        items: order.items || [],
+        totalPrice: order.totalPrice || 0,
+        date: order.date,
+      });
+    });
+  } catch (e) {
+    console.error('Error loading orders from localStorage:', e);
+  }
+
+  rawIndex = [...pageEntries, ...productEntries, ...orderEntries];
+
   fuseInstance = new Fuse(rawIndex, {
     includeScore: true,
     threshold: 0.35,
@@ -64,6 +170,14 @@ function buildIndex() {
   });
 
   indexBuilt = true;
+}
+
+/**
+ * Force rebuild index (call when cart/orders change)
+ */
+export function rebuildSearchIndex() {
+  indexBuilt = false;
+  buildIndex();
 }
 
 /**
@@ -88,6 +202,18 @@ export function searchSite(query, limit = 8) {
  */
 export function resolveSearchNavigation(item, navigate, location) {
   if (!item?.url) return;
+
+  // Handle product clicks
+  if (item.type === 'product') {
+    navigate(`/shop#${item.category}`);
+    return;
+  }
+
+  // Handle order clicks
+  if (item.type === 'order') {
+    navigate('/checkout');
+    return;
+  }
 
   const [path, hash] = item.url.split("#");
 
