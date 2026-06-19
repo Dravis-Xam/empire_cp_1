@@ -84,7 +84,7 @@ const CheckoutPage = () => {
             />
           </label>
 
-          <label>
+          {/* <label>
             Transaction Reference
             <input
               type="text"
@@ -101,7 +101,7 @@ const CheckoutPage = () => {
               value={`Empire Hub purchase: ${cart.length} item(s)`}
               readOnly
             />
-          </label>
+          </label> */}
 
           {message && <div className="checkout-message">{message}</div>}
 
